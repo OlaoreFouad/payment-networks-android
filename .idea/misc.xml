@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_payment_method.xml" value="0.4338461538461538" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2572463768115942" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.3691123188405797" />
         <entry key="app/src/main/res/layout/fragment_payment_methods.xml" value="0.4244791666666667" />
+        <entry key="app/src/main/res/layout/item_payment_method.xml" value="0.3691123188405797" />
       </map>
     </option>
   </component>
