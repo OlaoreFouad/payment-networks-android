@@ -8,15 +8,21 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dev.olaore.paymentnetworks.PaymentNetworksApplication;
+import dev.olaore.paymentnetworks.data.common.Result;
+import dev.olaore.paymentnetworks.data.common.Status;
+import dev.olaore.paymentnetworks.data.models.payments.domain.PaymentMethod;
 import dev.olaore.paymentnetworks.databinding.FragmentPaymentMethodsBinding;
 import dev.olaore.paymentnetworks.ui.payments.viewmodels.PaymentMethodsViewModel;
 import retrofit2.Response;
@@ -47,14 +53,11 @@ public class PaymentMethodsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        viewModel = new ViewModelProvider(this).get(PaymentMethodsViewModel.class);
-        // pause!
-//        viewModel.paymentMethods().observe(getViewLifecycleOwner(), new Observer<Response<JSONObject>>() {
-//            @Override
-//            public void onChanged(Response<JSONObject> jsonObjectResponse) {
-//
-//            }
-//        });
+        viewModel.paymentMethods().observe(getViewLifecycleOwner(), (result) -> {
+            if (result.getStatus() == Status.SUCCESS) {
+                Log.d("PaymentMethodsFragment", String.valueOf(result.getData().size()));
+            }
+        });
 
         viewModel.getPaymentMethods();
 

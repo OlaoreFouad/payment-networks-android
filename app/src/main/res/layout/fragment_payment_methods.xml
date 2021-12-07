@@ -12,12 +12,25 @@
         android:layout_height="match_parent"
         tools:context=".ui.payments.fragments.PaymentMethodsFragment">
 
+        <TextView
+            android:id="@+id/payment_methods_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arimo"
+            android:padding="16dp"
+            android:text="@string/payment_methods"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/headingDimen"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/payment_methods_heading"
             tools:itemCount="5"
             tools:listitem="@layout/item_payment_method" />
 
