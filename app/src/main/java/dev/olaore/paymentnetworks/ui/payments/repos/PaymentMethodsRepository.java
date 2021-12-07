@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import javax.inject.Inject;
 
+import dev.olaore.paymentnetworks.data.models.payments.network.NetworkPaymentMethods;
 import dev.olaore.paymentnetworks.data.remote.payments.PaymentsApiHelper;
 import retrofit2.Call;
 
@@ -16,7 +17,7 @@ public class PaymentMethodsRepository {
         this.paymentsApiHelper = paymentsApiHelper;
     }
 
-    public Call<JSONObject> getPaymentMethods() {
+    public Call<NetworkPaymentMethods> getPaymentMethods() {
         return this.paymentsApiHelper.getPaymentMethods();
     }
 

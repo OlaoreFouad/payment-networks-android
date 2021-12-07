@@ -8,11 +8,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
 
 import dev.olaore.paymentnetworks.PaymentNetworksApplication;
+import dev.olaore.paymentnetworks.data.models.payments.network.NetworkPaymentMethods;
 import dev.olaore.paymentnetworks.ui.payments.repos.PaymentMethodsRepository;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,7 +24,7 @@ public class PaymentMethodsViewModel extends ViewModel {
 
     PaymentMethodsRepository paymentMethodsRepository;
 
-    private MutableLiveData<Response<JSONObject>> _paymentMethods;
+    private MutableLiveData<Response<NetworkPaymentMethods>> _paymentMethods;
 
     @Inject
     public PaymentMethodsViewModel(PaymentMethodsRepository paymentMethodsRepository) {
@@ -30,22 +32,27 @@ public class PaymentMethodsViewModel extends ViewModel {
     }
 
     public void getPaymentMethods() {
-        paymentMethodsRepository.getPaymentMethods().enqueue(new Callback<JSONObject>() {
+        paymentMethodsRepository.getPaymentMethods().enqueue(new Callback<NetworkPaymentMethods>() {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+            public void onResponse(Call<NetworkPaymentMethods> call, Response<NetworkPaymentMethods> response) {
+                Log.d("PaymentMethodsViewModel", "" + response.code());
                 if (response.isSuccessful()) {
-                    Log.d("PaymentMethodsViewModel", response.body().toString());
+                    try {
+                        Log.d("PaymentMethodsViewModel", response.body().getLinks().getSelf());
+                    } catch (Exception ex) {
+                        Log.d("PaymentMethodsViewModel", ex.getMessage());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
+            public void onFailure(Call<NetworkPaymentMethods> call, Throwable t) {
                 Log.d("PaymentMethodsViewModel", t.getMessage());
             }
         });
     }
 
-    public LiveData<Response<JSONObject>> paymentMethods() {
+    public LiveData<Response<NetworkPaymentMethods>> paymentMethods() {
         return _paymentMethods;
     }
 
