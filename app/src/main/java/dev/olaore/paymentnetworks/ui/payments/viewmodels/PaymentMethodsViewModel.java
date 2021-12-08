@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,7 @@ public class PaymentMethodsViewModel extends ViewModel {
     }
 
     public void getPaymentMethods() {
+
         // post a loading state to the UI
         _paymentMethods.postValue(Result.loading());
 
