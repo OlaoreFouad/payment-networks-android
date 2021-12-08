@@ -7,11 +7,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ import dev.olaore.paymentnetworks.data.common.Result;
 import dev.olaore.paymentnetworks.data.common.Status;
 import dev.olaore.paymentnetworks.data.models.payments.domain.PaymentMethod;
 import dev.olaore.paymentnetworks.databinding.FragmentPaymentMethodsBinding;
+import dev.olaore.paymentnetworks.ui.payments.adapters.PaymentMethodsAdapter;
 import dev.olaore.paymentnetworks.ui.payments.viewmodels.PaymentMethodsViewModel;
 import retrofit2.Response;
 
@@ -33,6 +36,8 @@ public class PaymentMethodsFragment extends Fragment {
 
     @Inject
     PaymentMethodsViewModel viewModel;
+
+    private PaymentMethodsAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +50,6 @@ public class PaymentMethodsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPaymentMethodsBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
     }
 
@@ -54,12 +58,31 @@ public class PaymentMethodsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel.paymentMethods().observe(getViewLifecycleOwner(), (result) -> {
-            if (result.getStatus() == Status.SUCCESS) {
-                Log.d("PaymentMethodsFragment", String.valueOf(result.getData().size()));
+
+            binding.setIsLoading(result.getStatus() == Status.LOADING);
+            switch (result.getStatus()) {
+                case ERROR:
+                    Toast.makeText(requireContext(), "Error Occurred: " + result.getMessage(), Toast.LENGTH_LONG).show();
+                    break;
+                case SUCCESS:
+                    this.setupList(result.getData());
+                    break;
+                default:
+                    break;
             }
+
         });
 
         viewModel.getPaymentMethods();
 
     }
+
+    private void setupList(List<PaymentMethod> methods) {
+        adapter = new PaymentMethodsAdapter(methods);
+
+        binding.paymentMethodsList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.paymentMethodsList.setAdapter(adapter);
+
+    }
+
 }

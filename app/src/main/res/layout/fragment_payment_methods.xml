@@ -5,12 +5,31 @@
 
     <data>
 
+        <variable
+            name="isLoading"
+            type="Boolean" />
+
+        <import
+            alias="V"
+            type="android.view.View" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.payments.fragments.PaymentMethodsFragment">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:indeterminate="true"
+            android:visibility="@{ isLoading ? V.VISIBLE : V.GONE }"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/payment_methods_heading"
@@ -26,9 +45,11 @@
             tools:layout_editor_absoluteX="0dp" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/payment_methods_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="10dp"
+            android:visibility="@{ isLoading ? V.GONE : V.VISIBLE }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/payment_methods_heading"
             tools:itemCount="5"
