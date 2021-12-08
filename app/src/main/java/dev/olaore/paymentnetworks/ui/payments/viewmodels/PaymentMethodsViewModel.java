@@ -36,14 +36,18 @@ public class PaymentMethodsViewModel extends ViewModel {
     }
 
     public void getPaymentMethods() {
+        // post a loading state to the UI
         _paymentMethods.postValue(Result.loading());
+
         paymentMethodsRepository.getPaymentMethods().enqueue(new Callback<NetworkPaymentMethods>() {
             @Override
             public void onResponse(Call<NetworkPaymentMethods> call, Response<NetworkPaymentMethods> response) {
                 if (response.isSuccessful()) {
                     try {
+                        // if successful, post the retrieved data to the UI
                         _paymentMethods.postValue(Result.success(response.body().toDomainPaymentMethods()));
                     } catch (Exception ex) {
+                        // if it error-ed out, send the message to the UI
                         _paymentMethods.postValue(Result.error(ex.getMessage()));
                     }
                 }
@@ -51,6 +55,7 @@ public class PaymentMethodsViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<NetworkPaymentMethods> call, Throwable t) {
+                // if it error-ed out, send the message to the UI
                 _paymentMethods.postValue(Result.error(t.getMessage()));
             }
         });

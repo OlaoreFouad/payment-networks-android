@@ -43,6 +43,8 @@ public class PaymentMethodsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PaymentNetworksApplication app = (PaymentNetworksApplication) requireActivity().getApplication();
+
+        // inject required dependencies.
         app.appComponent.inject(this);
     }
 
@@ -59,12 +61,17 @@ public class PaymentMethodsFragment extends Fragment {
 
         viewModel.paymentMethods().observe(getViewLifecycleOwner(), (result) -> {
 
+            // set current loading state of the progress bar based on the status gotten from the endpoint..
             binding.setIsLoading(result.getStatus() == Status.LOADING);
+
+            // decide flow to continue based on status returned from endpoint call.
             switch (result.getStatus()) {
                 case ERROR:
+                    // toast a message on the UI
                     Toast.makeText(requireContext(), "Error Occurred: " + result.getMessage(), Toast.LENGTH_LONG).show();
                     break;
                 case SUCCESS:
+                    // set up list of payment method items.
                     this.setupList(result.getData());
                     break;
                 default:
@@ -78,8 +85,10 @@ public class PaymentMethodsFragment extends Fragment {
     }
 
     private void setupList(List<PaymentMethod> methods) {
+        // initialize adapter
         adapter = new PaymentMethodsAdapter(methods);
 
+        // setup adapter with list retrieved from endpoint.
         binding.paymentMethodsList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.paymentMethodsList.setAdapter(adapter);
 
