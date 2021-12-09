@@ -80,4 +80,28 @@ public class PaymentMethodsViewModelTest {
 
     }
 
+    @Test
+    public void shouldReturn_Error_WithErrorStatus() {
+        // arrange
+        Response<NetworkPaymentMethods> expectedPaymentMethodsResponse = Response.error(500, TestUtils.ERROR_RESPONSE);
+        Call expectedPaymentMethodsCall = Mockito.mock(Call.class);
+
+        Mockito.when(this.paymentMethodsService.getPaymentMethods()).thenReturn(expectedPaymentMethodsCall);
+
+        Mockito.doAnswer(invocation -> {
+            Callback<NetworkPaymentMethods> callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(expectedPaymentMethodsCall, expectedPaymentMethodsResponse);
+            return null;
+        }).when(expectedPaymentMethodsCall).enqueue(any(Callback.class));
+
+        // act
+        viewModel.getPaymentMethods();
+
+        viewModel.paymentMethods().observeForever((result) -> {
+            // assert
+            Mockito.verify(paymentMethodsService, Mockito.times(1)).getPaymentMethods();
+            Assert.assertEquals(result.getStatus(), Status.ERROR);
+        });
+    }
+
 }

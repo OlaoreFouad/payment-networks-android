@@ -44,14 +44,17 @@ public class PaymentMethodsViewModel extends ViewModel {
         paymentMethodsRepository.getPaymentMethods().enqueue(new Callback<NetworkPaymentMethods>() {
             @Override
             public void onResponse(Call<NetworkPaymentMethods> call, Response<NetworkPaymentMethods> response) {
-                if (response.isSuccessful()) {
-                    try {
+                try {
+                    if (response.isSuccessful()) {
                         // if successful, post the retrieved data to the UI
                         _paymentMethods.postValue(Result.success(response.body().toDomainPaymentMethods()));
-                    } catch (Exception ex) {
+                    } else {
                         // if it error-ed out, send the message to the UI
-                        _paymentMethods.postValue(Result.error(ex.getMessage()));
+                        _paymentMethods.postValue(Result.error(response.errorBody().string()));
                     }
+                } catch (Exception ex) {
+                    // if it error-ed out, send the message to the UI
+                    _paymentMethods.postValue(Result.error(ex.getMessage()));
                 }
             }
 
